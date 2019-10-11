@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {UsernameValidators} from '../common/validators/username.validators';
 
 @Component({
   selector: 'signup-form',
@@ -6,4 +8,28 @@ import {Component} from '@angular/core';
   styleUrls: ['./signup-form.component.css']
 })
 export class SignupFormComponent {
+
+  form = new FormGroup({
+    account: new FormGroup({
+      username: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        UsernameValidators.cannotContainSpace
+      ], UsernameValidators.shouldBeUnique),
+      password: new FormControl('', Validators.required)
+    })
+  });
+
+  get username() {
+    return this.form.get('account.username');
+  }
+
+  login() {
+    // const isValid = authService.login(this.form.value);
+    // if (!isValid) {
+    this.form.setErrors({
+      invalidLogin: true
+    });
+    // }
+  }
 }
